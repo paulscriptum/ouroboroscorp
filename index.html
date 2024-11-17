@@ -112,10 +112,16 @@
             30% { opacity: 1; }
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
+@keyframes typing {
+    from { 
+        width: 0;
+        visibility: visible; /* Делаем текст видимым в начале анимации */
+    }
+    to { 
+        width: 100%;
+        visibility: visible;
+    }
+}
 
         @keyframes blink {
             50% { border-color: transparent; }
@@ -149,24 +155,25 @@
             margin-bottom: 30px;
         }
 
-        .typed-text {
-            overflow: hidden;
-            white-space: nowrap;
-            letter-spacing: 2px;
-            position: relative;
-            width: 0;
-            border-right: 2px solid #00FF00;
-            font-size: 16px;
-            margin: 10px 0;
-            padding-right: 5px;
-            text-indent: -4px;
-        }
+.typed-text {
+    overflow: hidden;
+    white-space: nowrap;
+    letter-spacing: 2px;
+    position: relative;
+    width: 0; /* Начальная ширина 0 */
+    border-right: 4px solid #00FF00;
+    font-size: 16px;
+    margin: 10px 0;
+    padding-right: 5px;
+    visibility: hidden; /* Скрываем текст изначально */
+}
 
-        .typed-text.typing {
-            animation: 
-                typing 2s steps(40, end) forwards,
-                blink 0.5s step-end infinite alternate;
-        }
+.typed-text.typing {
+    visibility: visible; /* Показываем текст при начале анимации */
+    animation: 
+        typing 2s steps(40, end) forwards,
+        blink 0.5s step-end infinite alternate;
+}
 
         .menu {
             margin: 30px 0;
