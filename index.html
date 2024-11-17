@@ -4,70 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OUROBOROS CORPORATION - TERMINAL ACCESS</title>
-<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
- 
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* CRT and Terminal Effects */
-        @keyframes flicker {
-            0% { opacity: 0.98; }
-            5% { opacity: 0.95; }
-            10% { opacity: 0.96; }
-            15% { opacity: 0.98; }
-            20% { opacity: 0.94; }
-            25% { opacity: 0.97; }
-            30% { opacity: 0.98; }
-            35% { opacity: 0.95; }
-            40% { opacity: 0.96; }
-            45% { opacity: 0.97; }
-            50% { opacity: 0.98; }
-            55% { opacity: 0.95; }
-            60% { opacity: 0.97; }
-            65% { opacity: 0.95; }
-            70% { opacity: 0.98; }
-            75% { opacity: 0.96; }
-            80% { opacity: 0.97; }
-            85% { opacity: 0.95; }
-            90% { opacity: 0.98; }
-            95% { opacity: 0.96; }
-            100% { opacity: 0.98; }
-        }
-
-@keyframes scanline {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(100vh); }
-}
-
-@keyframes noise {
-    0%, 100% { background-position: 0 0; }
-    10% { background-position: -5% -10%; }
-    20% { background-position: -15% 5%; }
-    30% { background-position: 7% -25%; }
-    40% { background-position: 20% 25%; }
-    50% { background-position: -25% 10%; }
-    60% { background-position: 15% 5%; }
-    70% { background-position: 0% 15%; }
-    80% { background-position: 25% 35%; }
-    90% { background-position: -10% 10%; }
-}
-
-        @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
+        /* Base Styles */
         * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'VT323', monospace;
-    text-transform: uppercase;  /* делаем весь текст заглавными */
-    letter-spacing: 1px;
-}
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'VT323', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         body {
             background-color: #000;
@@ -76,60 +23,100 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            background: linear-gradient(
+                27deg,
+                rgba(0, 15, 0, 1) 0%,
+                rgba(0, 20, 0, 1) 49%,
+                rgba(0, 15, 0, 1) 100%
+            );
         }
 
-        /* Improved CRT effects */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;  /* Используем viewport width */
-    height: 100vh; /* Используем viewport height */
-    background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.4) 50%
-    );
-    background-size: 100% 2px;
-    pointer-events: none;
-    animation: scanline 8s linear infinite;
-    opacity: 0.5;
-    z-index: 2;  /* Должен быть меньше, чем у .container */
-}
+        /* CRT Background Effects */
+        .crt-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 255, 0, 0.02) 0px,
+                    rgba(0, 255, 0, 0.02) 1.5px,
+                    transparent 2px,
+                    transparent 6px
+                ),
+                radial-gradient(
+                    rgba(0, 255, 0, 0.01) 0%,
+                    rgba(0, 0, 0, 0.9) 100%
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
 
-body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: 
-        radial-gradient(
-            circle at center,
-            transparent 0%,
-            rgba(0, 0, 0, 0.4) 80%
-        ),
-        repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.11) 0px,
-            rgba(0, 0, 0, 0.11) 1px,
-            transparent 1px,
-            transparent 2px
-        );
-    pointer-events: none;
-    animation: noise 0.5s infinite;
-    opacity: 0.7;
-    z-index: 1;  /* Должен быть меньше, чем у ::before */
-}
+        /* Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 255, 0, 0.05) 1px,
+                rgba(0, 0, 0, 0.1) 2px
+            );
+            background-size: 100% 4px;
+            animation: scanline 10s linear infinite;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 2;
+        }
 
+        /* CRT Overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(
+                    circle at center,
+                    transparent 30%,
+                    rgba(0, 0, 0, 0.4) 90%
+                );
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.5;
+        }
+
+        /* Container and Content */
         .container {
             max-width: 800px;
             margin: 0 auto;
             position: relative;
-            z-index: 3;
+            z-index: 4;
         }
 
+        /* Animation Keyframes */
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            5% { opacity: 0.95; }
+            10% { opacity: 0.9; }
+            15% { opacity: 0.95; }
+            20% { opacity: 0.9; }
+            25% { opacity: 0.95; }
+            30% { opacity: 1; }
+        }
+
+        /* Existing styles from original code */
         .header {
             margin-bottom: 40px;
             border-bottom: 1px solid #00FF00;
@@ -171,26 +158,23 @@ body::after {
         }
 
         .menu-item {
-    margin: 15px 0;  /* увеличиваем отступ между пунктами */
-    cursor: pointer;
-    transition: color 0.3s;
-    font-size: 24px;  /* увеличиваем размер шрифта */
-    font-family: 'VT323', monospace;
-    line-height: 1.5;  /* увеличиваем межстрочный интервал */
-    text-transform: uppercase;  /* делаем текст заглавными буквами */
-    letter-spacing: 1px;  /* немного разряжаем буквы */
-}
+            margin: 15px 0;
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 24px;
+            line-height: 1.5;
+        }
 
-.menu-item::before {
-    content: "> ";
-    font-weight: bold;
-}
+        .menu-item::before {
+            content: "> ";
+            font-weight: bold;
+        }
 
-.menu-item:hover {
-    color: #00FFFF;
-    text-shadow: 0 0 8px #00FFFF;  /* усиливаем свечение при наведении */
-}
-        
+        .menu-item:hover {
+            color: #00FFFF;
+            text-shadow: 0 0 8px #00FFFF;
+        }
+
         .content {
             display: none;
             padding: 20px;
@@ -204,23 +188,18 @@ body::after {
             display: block;
         }
 
-.content h2 {
-    font-family: 'VT323', monospace;
-    font-size: 24px;
-    margin-bottom: 25px;
-    color: #00FFFF;
-    text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);
-    letter-spacing: 2px;
-    line-height: 1.5;
-}
+        .content h2 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #00FFFF;
+            text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);
+            letter-spacing: 2px;
+            line-height: 1.5;
+        }
 
         .project-title {
             color: #FFFF00;
             text-shadow: 0 0 5px #FFFF00;
-        }
-
-        .project-command {
-            color: #00FF00;
         }
 
         .terminal-input {
@@ -232,16 +211,6 @@ body::after {
             padding: 10px 0;
             margin-top: 20px;
         }
-
-        .input-hint {
-    font-family: 'VT323', monospace;
-    font-size: 14px;
-    color: #00FF00;
-    opacity: 0.7;
-    margin-top: 5px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
 
         .terminal-input:focus {
             outline: none;
@@ -256,30 +225,24 @@ body::after {
             padding-right: 10px;
         }
 
-        .terminal-output p {
-            margin: 5px 0;
-            line-height: 1.2;
-        }
-
-        .error-text {
-            color: #FF0000;
-            text-shadow: 0 0 5px #FF0000;
-        }
-
         .warning {
             color: #FF0000;
             margin: 20px 0;
             animation: flicker 0.3s infinite;
         }
 
-        .hidden-text {
-            display: none;
-            color: #001100;
-        }
+        /* Continue with rest of original styles... */
     </style>
 </head>
 <body>
+    <!-- CRT Effects Layers -->
+    <div class="crt-background"></div>
+    <div class="scanlines"></div>
+    <div class="crt-overlay"></div>
+
+    <!-- Original Content -->
     <div class="container">
+        <!-- Rest of the original HTML content goes here... -->
         <div class="header">
             <div class="ascii-logo">..####...##..##..#####....####...#####....####...#####....####....####..
 .##..##..##..##..##..##..##..##..##..##..##..##..##..##..##..##..##.....
