@@ -169,21 +169,26 @@
         }
 
         .menu-item {
-            margin: 10px 0;
-            cursor: pointer;
-            transition: color 0.3s;
-            font-size: 16px;
-        }
+    margin: 15px 0;  /* увеличиваем отступ между пунктами */
+    cursor: pointer;
+    transition: color 0.3s;
+    font-size: 24px;  /* увеличиваем размер шрифта */
+    font-family: 'VT323', monospace;
+    line-height: 1.5;  /* увеличиваем межстрочный интервал */
+    text-transform: uppercase;  /* делаем текст заглавными буквами */
+    letter-spacing: 1px;  /* немного разряжаем буквы */
+}
 
-        .menu-item:hover {
-            color: #00FFFF;
-            text-shadow: 0 0 5px #00FFFF;
-        }
+.menu-item::before {
+    content: "> ";
+    font-weight: bold;
+}
 
-        .menu-item::before {
-            content: "> ";
-        }
-
+.menu-item:hover {
+    color: #00FFFF;
+    text-shadow: 0 0 8px #00FFFF;  /* усиливаем свечение при наведении */
+}
+        
         .content {
             display: none;
             padding: 20px;
