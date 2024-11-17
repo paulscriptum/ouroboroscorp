@@ -6,7 +6,6 @@
     <title>OUROBOROS CORPORATION - TERMINAL ACCESS</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -17,12 +16,12 @@
         }
 
         body {
-            background-color: #000;
-            color: #00FF00;
-            min-height: 100vh;
+            margin: 0;
             padding: 20px;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
+            min-height: 100vh;
+            color: #00FF00;
             background: linear-gradient(
                 27deg,
                 rgba(0, 15, 0, 1) 0%,
@@ -54,7 +53,6 @@
             z-index: 1;
         }
 
-        /* Scanlines */
         .scanlines {
             position: fixed;
             top: 0;
@@ -74,7 +72,6 @@
             z-index: 2;
         }
 
-        /* CRT Overlay */
         .crt-overlay {
             position: fixed;
             top: 0;
@@ -92,7 +89,6 @@
             opacity: 0.5;
         }
 
-        /* Container and Content */
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -100,7 +96,7 @@
             z-index: 4;
         }
 
-        /* Animation Keyframes */
+        /* Animations */
         @keyframes scanline {
             0% { transform: translateY(0); }
             100% { transform: translateY(100vh); }
@@ -116,7 +112,16 @@
             30% { opacity: 1; }
         }
 
-        /* Existing styles from original code */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        /* Content Styles */
         .header {
             margin-bottom: 40px;
             border-bottom: 1px solid #00FF00;
@@ -147,10 +152,19 @@
         .typed-text {
             overflow: hidden;
             white-space: nowrap;
-            border-right: 0.15em solid #00FF00;
-            animation: typing 3.5s steps(40, end), blink 0.75s step-end infinite;
+            letter-spacing: 2px;
+            position: relative;
+            width: 0;
+            border-right: 2px solid #00FF00;
+            font-size: 16px;
             margin: 10px 0;
-            font-size: 14px;
+            padding-right: 5px;
+        }
+
+        .typed-text.typing {
+            animation: 
+                typing 2s steps(40, end) forwards,
+                blink 0.5s step-end infinite alternate;
         }
 
         .menu {
@@ -206,14 +220,25 @@
             background: transparent;
             border: none;
             color: #00FF00;
-            font-size: 20px;
+            font-size: 24px;
             width: 100%;
             padding: 10px 0;
             margin-top: 20px;
+            font-family: 'VT323', monospace;
         }
 
         .terminal-input:focus {
             outline: none;
+        }
+
+        .input-hint {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: #00FF00;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .terminal-output {
@@ -231,18 +256,20 @@
             animation: flicker 0.3s infinite;
         }
 
-        /* Continue with rest of original styles... */
+        .error-text {
+            color: #FF0000;
+            text-shadow: 0 0 5px #FF0000;
+        }
     </style>
 </head>
 <body>
-    <!-- CRT Effects Layers -->
+    <!-- CRT Effects -->
     <div class="crt-background"></div>
     <div class="scanlines"></div>
     <div class="crt-overlay"></div>
 
-    <!-- Original Content -->
+    <!-- Content -->
     <div class="container">
-        <!-- Rest of the original HTML content goes here... -->
         <div class="header">
             <div class="ascii-logo">..####...##..##..#####....####...#####....####...#####....####....####..
 .##..##..##..##..##..##..##..##..##..##..##..##..##..##..##..##..##.....
@@ -254,10 +281,7 @@
         </div>
 
         <div class="boot-sequence">
-            <div class="typed-text">INITIALIZING OUROBOROS TERMINAL...</div>
-            <div class="typed-text">QUANTUM BIOS v2.3 LOADED</div>
-            <div class="typed-text">ESTABLISHING SECURE CONNECTION...</div>
-            <div class="typed-text">ACCESS GRANTED - WELCOME TO OUROBOROS CORPORATION</div>
+            <!-- Text will be added by JavaScript -->
         </div>
 
         <div class="menu">
@@ -266,8 +290,8 @@
             <div class="menu-item" data-target="team">RESEARCH TEAM [REDACTED]</div>
             <div class="menu-item" data-target="contact">CONTACT [SECURE LINE]</div>
         </div>
-      
-      <div id="about" class="content">
+
+        <div id="about" class="content">
             <h2>[CLASSIFIED INFORMATION]</h2>
             <p>FOUNDED: 1978</p>
             <p>LOCATION: [COORDINATES REDACTED]</p>
@@ -345,11 +369,38 @@
         </div>
 
         <div class="terminal-output"></div>
-<input type="text" class="terminal-input" placeholder="> ENTER COMMAND">
-<div class="input-hint">[ENTER 'HELP' FOR A LIST OF COMMANDS]</div>
+        <input type="text" class="terminal-input" placeholder="> ENTER COMMAND">
+        <div class="input-hint">[ENTER 'HELP' FOR A LIST OF COMMANDS]</div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Boot sequence animation
+            const texts = [
+                "INITIALIZING OUROBOROS TERMINAL...",
+                "QUANTUM BIOS v2.3 LOADED",
+                "ESTABLISHING SECURE CONNECTION...",
+                "ACCESS GRANTED - WELCOME TO OUROBOROS CORPORATION"
+            ];
+            
+            const bootSequence = document.querySelector('.boot-sequence');
+            bootSequence.innerHTML = '';
+            
+            let delay = 0;
+            texts.forEach((text, index) => {
+                const div = document.createElement('div');
+                div.className = 'typed-text';
+                div.textContent = text;
+                bootSequence.appendChild(div);
+                
+                setTimeout(() => {
+                    div.classList.add('typing');
+                }, delay);
+                
+                delay += 2000;
+            });
+
+            // Menu functionality
             const menuItems = document.querySelectorAll('.menu-item');
             const contents = document.querySelectorAll('.content');
             const terminalInput = document.querySelector('.terminal-input');
@@ -366,7 +417,7 @@
                     notes: 'AI showing signs of advanced consciousness and superiority complex.',
                     features: 'Self-aware AI personality, Matrix printer interface, Emotional response generation'
                 },
-                'morze': {
+'morze': {
                     name: 'MORZE: QUANTUM COMMUNICATION DEVICE',
                     description: 'Light-based communication system utilizing quantum entanglement principles.',
                     status: 'IN DEVELOPMENT',
