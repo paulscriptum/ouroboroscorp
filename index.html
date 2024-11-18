@@ -519,7 +519,7 @@
                     addOutput('decrypt           - Attempt data decryption');
                     addOutput('timeline          - Check timeline stability');
                     addOutput('exit              - Terminate session');
-                    addOutput('/access [project] - Access project details');
+                    addOutput('access [project] - Access project details');
                 },
                 'clear': () => {
                     terminalOutput.innerHTML = '';
@@ -534,11 +534,11 @@
                 },
                 'projects': () => {
                     addOutput('PROJECT ACCESS COMMANDS:');
-                    addOutput('/access eg01  - Access EG-01 Project');
-                    addOutput('/access morze - Access MORZE Project');
-                    addOutput('/access v01ce - Access V-01-CE Project');
-                    addOutput('/access asc11 - Access ASC-11 Project');
-                    addOutput('/access t9    - Access POSSIBILITY-T9 Project');
+                    addOutput('access eg01  - Access EG-01 Project');
+                    addOutput('access morze - Access MORZE Project');
+                    addOutput('access v01ce - Access V-01-CE Project');
+                    addOutput('access asc11 - Access ASC-11 Project');
+                    addOutput('access t9    - Access POSSIBILITY-T9 Project');
                 },
                 'scan': () => {
                     addOutput('INITIATING QUANTUM SCAN...');
@@ -583,7 +583,7 @@
                     this.value = '';
                     addOutput(fullCommand);
                     
-                    if (fullCommand.startsWith('/access ')) {
+                    if (fullCommand.startsWith('access ')) {
                         const projectId = fullCommand.split(' ')[1];
                         if (projectDetails[projectId]) {
                             showProjectDetails(projectId);
